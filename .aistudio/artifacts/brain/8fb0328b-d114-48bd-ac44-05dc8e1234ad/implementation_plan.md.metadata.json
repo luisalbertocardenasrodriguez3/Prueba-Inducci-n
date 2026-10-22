@@ -1,0 +1,6 @@
+{
+  "summary":  "Plan estructurado para implementar la sincronización automática continua y desatendida entre el prototipo de inducción SENA y la hoja de cálculo de aprendices en Google Drive. Define el disparador por eventos al aprobar módulos/evaluación, la persistencia transparente de la sesión de Google, el indicador discreto en la barra superior y la eliminación de pasos manuales repetitivos.",
+  "updatedAt":  "2026-10-21T15:46:38.720659037Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}
