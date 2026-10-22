@@ -24,6 +24,8 @@ import {
   Film,
 } from 'lucide-react';
 import { TutorialVideoModal } from './TutorialVideoModal';
+import { LanguageToggle } from './LanguageToggle';
+import { useLanguage } from '../context/LanguageContext';
 import { SenaLogo } from './SenaLogo';
 import { LearnerProfile, DocumentType } from '../types/induction';
 import {
@@ -49,6 +51,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
   onSelectInstructor,
   defaultMode = 'select',
 }) => {
+  const { t, language } = useLanguage();
   const [mode, setMode] = useState<'select' | 'aprendiz_form' | 'instructor_login'>(defaultMode);
 
   // Instructor Password state
@@ -76,7 +79,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
       onSelectInstructor();
     } else {
       soundManager.playIncorrect();
-      setInstructorError('Clave incorrecta. La clave asignada para instructores es SENA1234.');
+      setInstructorError('Clave incorrecta. Por favor verifica tus credenciales de instructor.');
     }
   };
 
@@ -127,15 +130,19 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
             <div className={`hidden md:flex flex-col border-l pl-3.5 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
               <span className="text-xs font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Portal Oficial de Inducción
+                {t('portal_title')}
               </span>
               <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Reglamento del Aprendiz · Acuerdo 009 de 2024
+                {t('portal_subtitle')}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Bilingual Switcher Button (ES | EN) */}
+            <LanguageToggle theme={theme} variant="full" />
+
+            {/* Theme Toggle */}
             <button
               onClick={() => {
                 soundManager.playClick();
@@ -146,11 +153,13 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                   ? 'bg-slate-900 border-slate-800 text-amber-400 hover:border-amber-400/50'
                   : 'bg-white border-slate-200 text-slate-700 hover:border-emerald-500 shadow-xs'
               }`}
-              title="Cambiar tema"
+              title={isDark ? t('theme_light') : t('theme_dark')}
             >
               {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-emerald-600" />}
-              <span className="hidden sm:inline">{isDark ? 'Modo Claro' : 'Modo Oscuro'}</span>
+              <span className="hidden sm:inline">{isDark ? t('theme_light') : t('theme_dark')}</span>
             </button>
+
+            {/* Tutorial Video Button */}
             <button
               onClick={() => {
                 soundManager.playClick();
@@ -161,12 +170,13 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                   ? 'bg-emerald-950/70 hover:bg-emerald-900/80 border-emerald-500/50 text-emerald-300'
                   : 'bg-emerald-50 hover:bg-emerald-100 border-emerald-300 text-emerald-800'
               }`}
-              title="Ver video tutorial oficial de inducción (1:37 min)"
+              title={t('watch_tutorial')}
             >
               <span className="w-5 h-5 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
                 <Play className="w-2.5 h-2.5 fill-white ml-0.5" />
               </span>
-              <span>Ver Video Tutorial</span>
+              <span className="hidden sm:inline">{t('watch_tutorial')}</span>
+              <span className="sm:hidden">{t('watch_tutorial_short')}</span>
             </button>
           </div>
         </div>
@@ -180,15 +190,15 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
             <div className="text-center max-w-3xl mx-auto space-y-4">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
                 <Sparkles className="w-3.5 h-3.5" />
-                Plataforma de Inducción Gamificada SENA 2024 - 2026
+                {t('hero_badge')}
               </div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black font-['Space_Grotesk'] tracking-tight leading-tight">
-                Bienvenido al Portal de Inducción del Aprendiz
+                {t('hero_title')}
               </h1>
 
               <p className={`text-sm sm:text-base ${isDark ? 'text-slate-300' : 'text-slate-600'} leading-relaxed`}>
-                Para garantizar la privacidad y funciones correspondientes a cada usuario, selecciona cómo deseas ingresar a la plataforma:
+                {t('hero_desc')}
               </p>
             </div>
 
@@ -216,20 +226,17 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-black uppercase tracking-wider text-emerald-500 flex items-center gap-1">
                       <Film className="w-3 h-3" />
-                      Video Tutorial Oficial
+                      {t('tutorial_badge')}
                     </span>
                     <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
                       1:37 min
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold bg-sky-500/15 text-sky-500 border border-sky-500/30 hidden md:inline">
-                      Controles de reproducción activos
-                    </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-black font-['Space_Grotesk'] leading-tight">
-                    ¿Primera vez aquí? Mira el Video Tutorial antes de comenzar
+                    {t('tutorial_banner_title')}
                   </h3>
                   <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                    Aprende paso a paso cómo ingresar, realizar la caracterización sin errores y obtener tu Certificado con QR.
+                    {t('tutorial_banner_desc')}
                   </p>
                 </div>
               </div>
@@ -239,7 +246,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 className="shrink-0 w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-lime-600 hover:from-emerald-500 hover:to-lime-500 text-white font-black text-xs shadow-md shadow-emerald-900/30 flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95"
               >
                 <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
-                <span>Reproducir Video</span>
+                <span>{t('play_video')}</span>
               </button>
             </div>
 
@@ -263,38 +270,38 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                       <GraduationCap className="w-8 h-8" />
                     </div>
                     <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
-                      Sin Clave · Ingreso Libre
+                      {t('role_learner_badge')}
                     </span>
                   </div>
 
                   <div>
                     <h2 className="text-2xl font-black font-['Space_Grotesk'] text-emerald-500">
-                      Soy Aprendiz
+                      {t('role_learner_title')}
                     </h2>
                     <p className={`text-xs sm:text-sm mt-2 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                      Inicia tu proceso de inducción interactivo sobre el nuevo Reglamento del Aprendiz (Acuerdo 009 de 2024). Llena tus datos de caracterización una sola vez y supera los módulos para obtener tu Certificado Oficial.
+                      {t('role_learner_desc')}
                     </p>
                   </div>
 
                   <ul className={`space-y-2 text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>5 Estaciones formativas gamificadas con retos y dilemas</span>
+                      <span>{t('role_learner_feat1')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Evaluación final y Certificado con código QR verificable</span>
+                      <span>{t('role_learner_feat2')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Tus notas y avance se guardan automáticamente en Drive</span>
+                      <span>{t('role_learner_feat3')}</span>
                     </li>
                   </ul>
                 </div>
 
                 <div className="pt-6 mt-6 border-t border-inherit">
                   <button className="w-full py-3 px-5 rounded-2xl bg-[#39A900] hover:bg-[#2d8500] text-white font-bold text-sm shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2 group-hover:gap-3 transition-all">
-                    <span>Ingresar como Aprendiz (Caracterización)</span>
+                    <span>{t('role_learner_btn')}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -319,31 +326,31 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                     </div>
                     <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-500 border border-amber-500/30 flex items-center gap-1">
                       <Lock className="w-3 h-3" />
-                      Requiere Clave SENA1234
+                      {t('role_instructor_badge')}
                     </span>
                   </div>
 
                   <div>
                     <h2 className="text-2xl font-black font-['Space_Grotesk'] text-slate-800 dark:text-white">
-                      Soy Instructor
+                      {t('role_instructor_title')}
                     </h2>
                     <p className={`text-xs sm:text-sm mt-2 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                      Espacio exclusivo para instructores y coordinadores. Gestiona y revisa las notas de tus fichas en tiempo real, vincula hojas de cálculo en Google Drive y genera el enlace para tus aprendices.
+                      {t('role_instructor_desc')}
                     </p>
                   </div>
 
                   <ul className={`space-y-2 text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Panel con métricas de aprobación, notas y voceros postulados</span>
+                      <span>{t('role_instructor_feat1')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Generador de enlace oficial de inducción para compartir por WhatsApp/Teams</span>
+                      <span>{t('role_instructor_feat2')}</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Sincronización directa con Google Drive / Sheets</span>
+                      <span>{t('role_instructor_feat3')}</span>
                     </li>
                   </ul>
                 </div>
@@ -351,7 +358,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 <div className="pt-6 mt-6 border-t border-inherit">
                   <button className="w-full py-3 px-5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 group-hover:gap-3 transition-all border border-slate-700">
                     <Lock className="w-4 h-4 text-emerald-400" />
-                    <span>Ingresar como Instructor (Validar Clave)</span>
+                    <span>{t('role_instructor_btn')}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -382,7 +389,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                     isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  ← Volver a selección de rol
+                  {t('char_back')}
                 </button>
 
                 <button
@@ -399,7 +406,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                   title="Ver cómo llenar la caracterización y completar la inducción"
                 >
                   <Play className="w-3 h-3 fill-current" />
-                  <span>Ver Video Tutorial (1:37)</span>
+                  <span>{t('char_tutorial_btn')}</span>
                 </button>
               </div>
 
@@ -409,10 +416,10 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 </div>
                 <div>
                   <h2 className="text-2xl font-black font-['Space_Grotesk'] text-[#39A900]">
-                    Caracterización del Aprendiz
+                    {t('char_title')}
                   </h2>
                   <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                    Ingresa tus datos institucionales. Estos datos aparecerán en tu Certificado Oficial de Inducción.
+                    {t('char_subtitle')}
                   </p>
                 </div>
               </div>
@@ -428,14 +435,14 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 {/* Full name */}
                 <div>
                   <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                    Nombres y Apellidos Completos *
+                    {t('char_fullname')}
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    placeholder="Ej. Juan Carlos Pérez Gómez"
+                    placeholder={t('char_fullname_ph')}
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none transition-all ${
                       isDark
                         ? 'bg-slate-800 border-slate-700 text-white focus:border-emerald-500'
@@ -448,7 +455,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Tipo de Doc. *
+                      {t('char_doctype')}
                     </label>
                     <select
                       value={formData.documentType}
@@ -469,7 +476,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
 
                   <div className="sm:col-span-2">
                     <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Número de Documento *
+                      {t('char_docnum')}
                     </label>
                     <input
                       type="text"
@@ -490,7 +497,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Regional SENA *
+                      {t('char_regional')}
                     </label>
                     <select
                       value={formData.regional}
@@ -511,7 +518,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
 
                   <div>
                     <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Número de Ficha *
+                      {t('char_ficha')}
                     </label>
                     <input
                       type="text"
@@ -531,7 +538,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 {/* Centro de Formacion */}
                 <div>
                   <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                    Centro de Formación *
+                    {t('char_center')}
                   </label>
                   <input
                     type="text"
@@ -551,7 +558,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
                     <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Programa de Formación *
+                      {t('char_program')}
                     </label>
                     <input
                       type="text"
@@ -569,7 +576,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
 
                   <div>
                     <label className={`block text-xs font-bold mb-1 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Modalidad
+                      {t('char_modality')}
                     </label>
                     <select
                       value={formData.modalidad}
@@ -580,9 +587,9 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                           : 'bg-slate-50 border-slate-200 text-slate-800'
                       }`}
                     >
-                      <option value="Presencial">Presencial</option>
-                      <option value="Virtual">Virtual</option>
-                      <option value="Distancia">A Distancia</option>
+                      <option value="Presencial">{t('char_mod_presencial')}</option>
+                      <option value="Virtual">{t('char_mod_virtual')}</option>
+                      <option value="Distancia">{t('char_mod_distancia')}</option>
                     </select>
                   </div>
                 </div>
@@ -596,9 +603,9 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                   <div className="flex items-center gap-3">
                     <Award className="w-5 h-5 text-indigo-400 shrink-0" />
                     <div>
-                      <p className="text-xs font-bold">¿Deseas postularte como Vocero de Aprendices?</p>
+                      <p className="text-xs font-bold">{t('char_vocero_q')}</p>
                       <p className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                        Liderazgo estudiantil regulado en el Art. 62 del Acuerdo 009 de 2024.
+                        {t('char_vocero_desc')}
                       </p>
                     </div>
                   </div>
@@ -616,11 +623,11 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                     type="submit"
                     className="w-full py-3.5 px-4 rounded-2xl font-black text-sm bg-gradient-to-r from-[#39A900] to-lime-600 hover:from-[#2f8800] hover:to-lime-500 text-white shadow-xl shadow-emerald-900/30 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
                   >
-                    <span>Comenzar Mi Inducción SENA</span>
+                    <span>{t('char_submit')}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                   <p className={`text-center text-[11px] mt-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                    Ingreso directo sin contraseña para aprendices
+                    {t('char_note')}
                   </p>
                 </div>
               </form>
@@ -648,7 +655,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                   isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                ← Volver a selección de rol
+                {t('char_back')}
               </button>
 
               <div className="flex items-center gap-3.5 mb-5">
@@ -657,10 +664,10 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                 </div>
                 <div>
                   <h2 className="text-2xl font-black font-['Space_Grotesk']">
-                    Acceso de Instructor
+                    {t('inst_title')}
                   </h2>
                   <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                    Ingresa la clave institucional para acceder al panel de control.
+                    {t('inst_subtitle')}
                   </p>
                 </div>
               </div>
@@ -675,7 +682,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
               <form onSubmit={handleInstructorSubmit} className="space-y-5">
                 <div>
                   <label className={`block text-xs font-bold mb-1.5 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                    Clave de Acceso del Instructor *
+                    {t('inst_key_label')}
                   </label>
                   <div className="relative">
                     <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -685,7 +692,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                       autoFocus
                       value={instructorPassword}
                       onChange={(e) => setInstructorPassword(e.target.value)}
-                      placeholder="Ingresa la clave SENA1234"
+                      placeholder={t('inst_key_ph')}
                       className={`w-full pl-10 pr-11 py-3 rounded-xl border text-sm font-mono tracking-wider outline-none transition-all ${
                         isDark
                           ? 'bg-slate-800 border-slate-700 text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
@@ -702,11 +709,9 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                     </button>
                   </div>
 
-                  <div className={`mt-2 p-2.5 rounded-xl border text-[11px] ${
-                    isDark ? 'bg-slate-800/60 border-slate-700/80 text-slate-300' : 'bg-emerald-50/80 border-emerald-200 text-emerald-900'
-                  }`}>
-                    Clave asignada: <strong className="font-mono text-emerald-500">SENA1234</strong>
-                  </div>
+                  <p className={`mt-2 text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                    {t('inst_key_note')}
+                  </p>
                 </div>
 
                 <button
@@ -714,7 +719,7 @@ export const RoleSelectionLanding: React.FC<RoleSelectionLandingProps> = ({
                   className="w-full py-3.5 px-4 rounded-2xl font-black text-sm bg-gradient-to-r from-emerald-600 to-lime-600 hover:from-emerald-500 hover:to-lime-500 text-white shadow-xl shadow-emerald-900/30 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Ingresar al Panel de Instructor</span>
+                  <span>{t('inst_submit')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </form>

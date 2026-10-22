@@ -24,6 +24,8 @@ import {
   LogOut,
 } from 'lucide-react';
 import { SenaLogo } from './SenaLogo';
+import { LanguageToggle } from './LanguageToggle';
+import { useLanguage } from '../context/LanguageContext';
 import { LearnerProfile, UserGameState, UserRole, InstructorActiveTab } from '../types/induction';
 import { soundManager } from '../utils/soundEffects';
 import {
@@ -73,6 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
   onCopyApprenticeLink,
   onExitToLanding,
 }) => {
+  const { t } = useLanguage();
   const [autoSync, setAutoSync] = useState<AutoSyncState>(getAutoSyncState);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -115,8 +118,8 @@ export const Header: React.FC<HeaderProps> = ({
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-        {/* Left: Theme Switcher & Institutional Branding */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        {/* Left: Theme Switcher, Language Switcher & Institutional Branding */}
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => {
               soundManager.playClick();
@@ -127,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
                 ? 'bg-slate-900/70 hover:bg-slate-800/80 border-amber-400/40 hover:border-amber-400/80 text-amber-300 shadow-black/40'
                 : 'bg-white/80 hover:bg-emerald-50 border-emerald-500/40 hover:border-emerald-600 text-emerald-800 shadow-emerald-900/10'
             }`}
-            title={isDark ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
+            title={isDark ? t('theme_light') : t('theme_dark')}
             aria-label="Cambiar tema de color"
           >
             <div
@@ -144,9 +147,12 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
             <span className="text-xs sm:text-sm font-bold tracking-tight hidden md:inline">
-              {isDark ? 'Modo Claro' : 'Modo Oscuro'}
+              {isDark ? t('theme_light') : t('theme_dark')}
             </span>
           </button>
+
+          {/* Bilingual Language Switcher (ES / EN) */}
+          <LanguageToggle theme={theme} />
 
           <div className={`h-8 w-px ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`} />
 
@@ -156,10 +162,10 @@ export const Header: React.FC<HeaderProps> = ({
           <div className={`hidden md:flex flex-col border-l pl-3.5 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
             <span className="text-xs sm:text-sm font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-1.5">
               <span className={`inline-block w-2.5 h-2.5 rounded-full ${isInstructor ? 'bg-emerald-400' : 'bg-emerald-500 animate-pulse'}`} />
-              {isInstructor ? 'Panel de Instructor SENA' : 'Inducción 2024-2026'}
+              {isInstructor ? t('header_instructor_title') : t('header_induction_title')}
             </span>
             <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              {isInstructor ? 'Gestión y Seguimiento' : 'Reglamento Acuerdo 009/2024'}
+              {isInstructor ? t('header_instructor_sub') : t('header_induction_sub')}
             </span>
           </div>
         </div>
@@ -186,12 +192,12 @@ export const Header: React.FC<HeaderProps> = ({
                 {copiedLink ? (
                   <>
                     <Check className="w-3.5 h-3.5" />
-                    <span>¡Enlace Copiado!</span>
+                    <span>{t('header_link_copied')}</span>
                   </>
                 ) : (
                   <>
                     <Share2 className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Compartir Enlace</span>
+                    <span className="hidden sm:inline">{t('header_share')}</span>
                   </>
                 )}
               </button>
@@ -215,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
                   title="Configuración de hoja en Google Drive"
                 >
                   <FileSpreadsheet className="w-3.5 h-3.5 text-[#39A900]" />
-                  <span className="hidden lg:inline">Google Sheets</span>
+                  <span className="hidden lg:inline">{t('header_sheets')}</span>
                   {autoSync.status === 'synced' && (
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   )}
@@ -255,7 +261,7 @@ export const Header: React.FC<HeaderProps> = ({
                 title="Ver Plan Estructurado de Inducción"
               >
                 <FileText className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="hidden lg:inline">Plan Inducción</span>
+                <span className="hidden lg:inline">{t('header_plan')}</span>
               </button>
 
               {/* Tutor SENA */}
@@ -272,7 +278,7 @@ export const Header: React.FC<HeaderProps> = ({
                 title="Preguntarle al Tutor IA de Inducción SENA"
               >
                 <BotMessageSquare className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="hidden sm:inline">Tutor SENA</span>
+                <span className="hidden sm:inline">{t('header_tutor')}</span>
               </button>
 
               {/* Discreet AutoSync Indicator for Aprendiz (No modal button) */}
@@ -291,12 +297,12 @@ export const Header: React.FC<HeaderProps> = ({
                 {autoSync.status === 'syncing' ? (
                   <>
                     <RefreshCw className="w-3 h-3 text-amber-400 animate-spin" />
-                    <span className="hidden xl:inline">Guardando...</span>
+                    <span className="hidden xl:inline">{t('header_autosync_saving')}</span>
                   </>
                 ) : (
                   <>
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="hidden xl:inline">Autoguardado Activo</span>
+                    <span className="hidden xl:inline">{t('header_autosync_active')}</span>
                   </>
                 )}
               </div>
@@ -317,7 +323,7 @@ export const Header: React.FC<HeaderProps> = ({
                 title="Ver o generar Certificado Oficial"
               >
                 <GraduationCap className={`w-3.5 h-3.5 ${gameState.evaluationCompleted ? 'text-white' : 'text-amber-500'}`} />
-                <span className="hidden sm:inline">Certificado</span>
+                <span className="hidden sm:inline">{t('header_cert')}</span>
               </button>
 
               {/* Profile button */}

@@ -40,7 +40,9 @@ import { GoogleSheetsModal } from './components/GoogleSheetsModal';
 import { InstructorDashboard } from './components/InstructorDashboard';
 import { InstructorAccessModal } from './components/InstructorAccessModal';
 import { RoleSelectionLanding } from './components/RoleSelectionLanding';
+import { TutorialVideoModal } from './components/TutorialVideoModal';
 import { SenaLogo } from './components/SenaLogo';
+import { useLanguage } from './context/LanguageContext';
 import {
   DEFAULT_LEARNER,
   SENA_MODULES,
@@ -72,6 +74,7 @@ const INITIAL_GAME_STATE: UserGameState = {
 };
 
 export default function App() {
+  const { t } = useLanguage();
   // Role Detection: Check URL query param first (?role=aprendiz or ?role=instructor)
   const [role, setRole] = useState<UserRole>(() => {
     if (typeof window !== 'undefined') {
@@ -174,6 +177,7 @@ export default function App() {
   const [showCertificateView, setShowCertificateView] = useState(false);
   const [isVerifierOpen, setIsVerifierOpen] = useState(false);
   const [verifierCode, setVerifierCode] = useState('');
+  const [isTutorialOpen, setIsTutorialOpen] = useState(false);
 
   // Persist role
   useEffect(() => {
@@ -514,13 +518,13 @@ export default function App() {
                       }`}
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      Inducción Gamificada SENA 2024 - 2026
+                      {t('hero_badge')}
                     </span>
                     <span className={`text-xs font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                       Acuerdo 009 de 2024
                     </span>
                     <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
-                      Modo Aprendiz
+                      {isInstructor ? t('header_preview') : t('role_learner_title')}
                     </span>
                   </div>
 
@@ -529,7 +533,7 @@ export default function App() {
                       isDark ? 'text-white' : 'text-slate-900'
                     }`}
                   >
-                    ¡Bienvenido(a),{' '}
+                    {t('welcome_greeting')}{' '}
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-lime-500">
                       {learner.fullName}
                     </span>
@@ -537,20 +541,34 @@ export default function App() {
                   </h1>
 
                   <p className={`text-xs sm:text-sm leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                    Apropia tus derechos, deberes y el nuevo reglamento institucional a través de retos interactivos, simuladores de dilemas éticos y evaluaciones gamificadas. Al superar la ruta, obtendrás tu <strong className="text-emerald-500">Certificado Oficial de Inducción con código QR</strong>.
+                    {t('welcome_lead')}
                   </p>
 
-                  <div className={`flex flex-wrap items-center gap-4 text-xs pt-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                    <div className="flex items-center gap-1.5">
-                      <strong className={isDark ? 'text-slate-200' : 'text-slate-800'}>Programa:</strong> {learner.programaFormacion}
-                    </div>
-                    <div className={`h-3 w-px hidden sm:block ${isDark ? 'bg-slate-700' : 'bg-slate-300'}`} />
-                    <div className="flex items-center gap-1.5 font-mono">
-                      <strong className={isDark ? 'text-slate-200' : 'text-slate-800'}>Ficha:</strong> {learner.numeroFicha}
-                    </div>
-                    <div className={`h-3 w-px hidden sm:block ${isDark ? 'bg-slate-700' : 'bg-slate-300'}`} />
-                    <div className="flex items-center gap-1.5">
-                      <strong className={isDark ? 'text-slate-200' : 'text-slate-800'}>Regional:</strong> {learner.regional}
+                  <div className="flex flex-wrap items-center gap-3 pt-1">
+                    <button
+                      onClick={() => {
+                        soundManager.playClick();
+                        setIsTutorialOpen(true);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-all hover:scale-105"
+                      title={t('watch_tutorial')}
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{t('watch_tutorial_short')}</span>
+                    </button>
+
+                    <div className={`flex flex-wrap items-center gap-4 text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                      <div className="flex items-center gap-1.5">
+                        <strong className={isDark ? 'text-slate-200' : 'text-slate-800'}>Programa:</strong> {learner.programaFormacion}
+                      </div>
+                      <div className={`h-3 w-px hidden sm:block ${isDark ? 'bg-slate-700' : 'bg-slate-300'}`} />
+                      <div className="flex items-center gap-1.5 font-mono">
+                        <strong className={isDark ? 'text-slate-200' : 'text-slate-800'}>Ficha:</strong> {learner.numeroFicha}
+                      </div>
+                      <div className={`h-3 w-px hidden sm:block ${isDark ? 'bg-slate-700' : 'bg-slate-300'}`} />
+                      <div className="flex items-center gap-1.5">
+                        <strong className={isDark ? 'text-slate-200' : 'text-slate-800'}>Regional:</strong> {learner.regional}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -565,7 +583,7 @@ export default function App() {
                 >
                   <div className="flex items-center justify-between">
                     <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                      Progreso de Inducción
+                      {t('progress_title')}
                     </span>
                     <span className="text-base font-black text-emerald-500 font-mono">
                       {overallProgressPercentage}%
@@ -585,17 +603,19 @@ export default function App() {
                       <div className={`font-bold text-sm ${isDark ? 'text-white' : 'text-slate-900'}`}>
                         {completedCount}/{SENA_MODULES.length}
                       </div>
-                      <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Módulos Listos</div>
+                      <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                        {t('progress_modules_label')}
+                      </div>
                     </div>
                     <div className={`p-2 rounded-xl border ${isDark ? 'bg-slate-950/70 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
                       <div className="font-bold text-amber-500 text-sm">
-                        {gameState.evaluationCompleted ? 'Aprobado' : 'Pendiente'}
+                        {gameState.evaluationCompleted ? t('status_passed') : t('status_pending')}
                       </div>
-                      <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Evaluación Final</div>
+                      <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                        {t('progress_exam_label')}
+                      </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
 
@@ -839,6 +859,13 @@ export default function App() {
           setRole('instructor');
           setInstructorTab('dashboard');
         }}
+        theme={theme}
+      />
+
+      {/* 10. Tutorial Video Floating Modal */}
+      <TutorialVideoModal
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
         theme={theme}
       />
     </div>

@@ -44,7 +44,7 @@ export const InstructorAccessModal: React.FC<InstructorAccessModalProps> = ({
       onClose();
     } else {
       soundManager.playIncorrect();
-      setError('Clave incorrecta. La clave oficial de instructor es SENA1234.');
+      setError('Clave incorrecta. Por favor verifica tus credenciales institucionales.');
     }
   };
 
@@ -137,7 +137,7 @@ export const InstructorAccessModal: React.FC<InstructorAccessModalProps> = ({
                 type="password"
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                placeholder="Ingresa la clave SENA1234"
+                placeholder="Ingresa tu clave de acceso institucional"
                 autoFocus
                 className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-sm font-mono tracking-wider outline-none transition-all ${
                   isDark
@@ -146,8 +146,8 @@ export const InstructorAccessModal: React.FC<InstructorAccessModalProps> = ({
                 }`}
               />
             </div>
-            <p className={`text-[11px] mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-              Clave institucional: <span className="font-mono font-bold text-emerald-500">SENA1234</span>
+            <p className={`text-[11px] mt-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              Acceso restringido a instructores y coordinadores autorizados del SENA.
             </p>
           </div>
 

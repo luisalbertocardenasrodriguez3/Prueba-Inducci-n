@@ -17,6 +17,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { soundManager } from '../utils/soundEffects';
+import { useLanguage } from '../context/LanguageContext';
 
 interface TutorialVideoModalProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ export const TutorialVideoModal: React.FC<TutorialVideoModalProps> = ({
   onStartInduction,
   theme = 'dark',
 }) => {
+  const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -177,15 +179,15 @@ export const TutorialVideoModal: React.FC<TutorialVideoModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base sm:text-lg font-black font-['Space_Grotesk'] leading-tight">
-                  Video Tutorial: Inducción Institucional SENA
+                  {t('modal_video_title')}
                 </h3>
                 <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-mono">
                   <Clock className="w-3 h-3" />
-                  1:37 min
+                  {t('modal_video_duration')}
                 </span>
               </div>
               <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Guía visual oficial: Caracterización sin errores, 5 módulos y descarga del Certificado con QR
+                {t('modal_video_sub')}
               </p>
             </div>
           </div>
@@ -412,25 +414,25 @@ export const TutorialVideoModal: React.FC<TutorialVideoModalProps> = ({
               <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">
                 1
               </span>
-              <span>Ingreso Aprendiz</span>
+              <span>{t('modal_step1')}</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-400">
               <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">
                 2
               </span>
-              <span>Caracterización</span>
+              <span>{t('modal_step2')}</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-400">
               <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">
                 3
               </span>
-              <span>5 Módulos + Test</span>
+              <span>{t('modal_step3')}</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-400">
               <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-[10px]">
                 4
               </span>
-              <span>Certificado con QR</span>
+              <span>{t('modal_step4')}</span>
             </div>
           </div>
 
@@ -444,7 +446,7 @@ export const TutorialVideoModal: React.FC<TutorialVideoModalProps> = ({
                 isDark ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              Cerrar
+              {t('modal_video_close')}
             </button>
 
             {onStartInduction && (
@@ -456,7 +458,7 @@ export const TutorialVideoModal: React.FC<TutorialVideoModalProps> = ({
                 }}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-lime-600 hover:from-emerald-500 hover:to-lime-500 text-white font-black text-xs shadow-md shadow-emerald-900/30 flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95"
               >
-                <span>Comenzar Mi Inducción</span>
+                <span>{t('modal_video_start')}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
